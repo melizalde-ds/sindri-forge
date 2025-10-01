@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "crates/sindri-core",
+    "crates/sindri-driver-firecracker",
+    "crates/sindri-api"
+]
+resolver = "2"
