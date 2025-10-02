@@ -1,3 +1,5 @@
+mod v1;
+
 use axum::{Json, Router, routing::get};
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
@@ -6,7 +8,8 @@ use tokio::net::TcpListener;
 async fn main() -> anyhow::Result<()> {
     let app = Router::new()
         .route("/healthz", get(healthz))
-        .route("/readyz", get(readyz));
+        .route("/readyz", get(readyz))
+        .nest("/api/v1", crate::v1::router());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("Listening on {}", addr);
