@@ -9,3 +9,4 @@ serde = { workspace = true }
 axum = { version = "0.8", features = ["default", "macros"] }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
+serde_json = { workspace = true }

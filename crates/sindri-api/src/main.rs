@@ -1,12 +1,12 @@
-use axum::{Router, routing::get};
+use axum::{Json, Router, routing::get};
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let app = Router::new()
-        .route("/", get(async || "OK"))
-        .route("/hello-world", get(hello_world));
+        .route("/healthz", get(healthz))
+        .route("/readyz", get(readyz));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("Listening on {}", addr);
@@ -15,6 +15,15 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn hello_world() -> &'static str {
-    "Hello, World!"
+async fn healthz() -> Json<serde_json::Value> {
+    Json(serde_json::json!({
+        "status": "OK"
+    }))
+}
+
+async fn readyz() -> Json<serde_json::Value> {
+    // TODO: Add readiness checks here
+    Json(serde_json::json!({
+        "status": "OK"
+    }))
 }
