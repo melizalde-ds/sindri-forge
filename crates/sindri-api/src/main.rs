@@ -1,3 +1,4 @@
+mod error;
 mod v1;
 
 use axum::{Json, Router, routing::get};

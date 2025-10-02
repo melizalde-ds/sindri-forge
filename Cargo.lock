@@ -530,6 +530,7 @@ dependencies = [
  "axum",
  "serde",
  "serde_json",
+ "sindri-core",
  "thiserror",
  "tokio",
 ]
@@ -537,6 +538,9 @@ dependencies = [
 [[package]]
 name = "sindri-core"
 version = "0.1.0"
+dependencies = [
+ "thiserror",
+]
 
 [[package]]
 name = "sindri-driver-firecracker"
