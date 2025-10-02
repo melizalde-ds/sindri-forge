@@ -1,39 +1,40 @@
+use crate::error::ApiError;
 use axum::{
     Json, Router,
     extract::Path,
     routing::{delete, get, post, put},
 };
 
-async fn list_vms() -> Json<&'static str> {
-    Json("List of VMs")
+async fn list_vms() -> Result<Json<&'static str>, ApiError> {
+    Ok(Json("List of VMs"))
 }
 
-async fn create_vm() -> Json<&'static str> {
-    Json("Create VM")
+async fn create_vm() -> Result<Json<&'static str>, ApiError> {
+    Ok(Json("Create VM"))
 }
 
-async fn get_vm(Path(vm_id): Path<String>) -> Json<String> {
-    Json(format!("Get VM with ID: {}", vm_id))
+async fn get_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+    Ok(Json(format!("Get VM with ID: {}", vm_id)))
 }
 
-async fn update_vm(Path(vm_id): Path<String>) -> Json<String> {
-    Json(format!("Update VM with ID: {}", vm_id))
+async fn update_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+    Ok(Json(format!("Update VM with ID: {}", vm_id)))
 }
 
-async fn destroy_vm(Path(vm_id): Path<String>) -> Json<String> {
-    Json(format!("Destroy VM with ID: {}", vm_id))
+async fn destroy_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+    Ok(Json(format!("Destroy VM with ID: {}", vm_id)))
 }
 
-async fn start_vm(Path(vm_id): Path<String>) -> Json<String> {
-    Json(format!("Start VM with ID: {}", vm_id))
+async fn start_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+    Ok(Json(format!("Start VM with ID: {}", vm_id)))
 }
 
-async fn stop_vm(Path(vm_id): Path<String>) -> Json<String> {
-    Json(format!("Stop VM with ID: {}", vm_id))
+async fn stop_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+    Ok(Json(format!("Stop VM with ID: {}", vm_id)))
 }
 
-async fn vm_metrics(Path(vm_id): Path<String>) -> Json<String> {
-    Json(format!("Metrics for VM with ID: {}", vm_id))
+async fn vm_metrics(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+    Ok(Json(format!("Metrics for VM with ID: {}", vm_id)))
 }
 
 pub fn router() -> Router {
