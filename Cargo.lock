@@ -545,6 +545,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "sindri-daemon"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "sindri-core",
+ "tokio",
+]
+
+[[package]]
 name = "sindri-driver-firecracker"
 version = "0.1.0"
 
