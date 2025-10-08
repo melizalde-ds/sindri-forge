@@ -57,7 +57,7 @@ async fn test_get_vm() {
         .oneshot(
             Request::builder()
                 .method(Method::GET)
-                .uri("/api/v1/vms/vm-123")
+                .uri("/api/v1/vms/123")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -68,7 +68,7 @@ async fn test_get_vm() {
 
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body_str = String::from_utf8(body.to_vec()).unwrap();
-    assert!(body_str.contains("vm-123"));
+    assert!(body_str.contains("123"));
 }
 
 #[tokio::test]
@@ -79,7 +79,7 @@ async fn test_update_vm() {
         .oneshot(
             Request::builder()
                 .method(Method::PUT)
-                .uri("/api/v1/vms/vm-456")
+                .uri("/api/v1/vms/456")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -90,7 +90,7 @@ async fn test_update_vm() {
 
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body_str = String::from_utf8(body.to_vec()).unwrap();
-    assert!(body_str.contains("vm-456"));
+    assert!(body_str.contains("456"));
 }
 
 #[tokio::test]
@@ -101,7 +101,7 @@ async fn test_destroy_vm() {
         .oneshot(
             Request::builder()
                 .method(Method::DELETE)
-                .uri("/api/v1/vms/vm-789")
+                .uri("/api/v1/vms/789")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -112,7 +112,7 @@ async fn test_destroy_vm() {
 
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body_str = String::from_utf8(body.to_vec()).unwrap();
-    assert!(body_str.contains("vm-789"));
+    assert!(body_str.contains("789"));
 }
 
 #[tokio::test]
@@ -123,7 +123,7 @@ async fn test_start_vm() {
         .oneshot(
             Request::builder()
                 .method(Method::POST)
-                .uri("/api/v1/vms/vm-111/start")
+                .uri("/api/v1/vms/111/start")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -134,7 +134,7 @@ async fn test_start_vm() {
 
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body_str = String::from_utf8(body.to_vec()).unwrap();
-    assert!(body_str.contains("vm-111"));
+    assert!(body_str.contains("111"));
 }
 
 #[tokio::test]
@@ -145,7 +145,7 @@ async fn test_stop_vm() {
         .oneshot(
             Request::builder()
                 .method(Method::POST)
-                .uri("/api/v1/vms/vm-222/stop")
+                .uri("/api/v1/vms/222/stop")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -156,7 +156,7 @@ async fn test_stop_vm() {
 
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body_str = String::from_utf8(body.to_vec()).unwrap();
-    assert!(body_str.contains("vm-222"));
+    assert!(body_str.contains("222"));
 }
 
 #[tokio::test]
@@ -167,7 +167,7 @@ async fn test_vm_metrics() {
         .oneshot(
             Request::builder()
                 .method(Method::GET)
-                .uri("/api/v1/vms/vm-333/metrics")
+                .uri("/api/v1/vms/333/metrics")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -178,7 +178,7 @@ async fn test_vm_metrics() {
 
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body_str = String::from_utf8(body.to_vec()).unwrap();
-    assert!(body_str.contains("vm-333"));
+    assert!(body_str.contains("333"));
 }
 
 #[tokio::test]
