@@ -14,3 +14,4 @@ path = "src/lib.rs"
 [dependencies]
 tokio = { workspace = true }
 anyhow = { workspace = true }
+sindri-core = { workspace = true }
