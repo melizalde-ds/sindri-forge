@@ -12,3 +12,5 @@ name = "sindri_daemon"
 path = "src/lib.rs"
 
 [dependencies]
+tokio = { workspace = true }
+anyhow = { workspace = true }
