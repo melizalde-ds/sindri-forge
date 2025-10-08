@@ -1,0 +1,14 @@
+[package]
+name = "sindri-daemon"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "sindrid"
+path = "src/main.rs"
+
+[lib]
+name = "sindri_daemon"
+path = "src/lib.rs"
+
+[dependencies]
