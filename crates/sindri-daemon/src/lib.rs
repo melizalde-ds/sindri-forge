@@ -15,3 +15,12 @@ impl Daemon {
         }
     }
 }
+
+impl Default for Daemon {
+    fn default() -> Self {
+        Self {
+            vms: HashMap::new(),
+            next_id: 1,
+        }
+    }
+}
