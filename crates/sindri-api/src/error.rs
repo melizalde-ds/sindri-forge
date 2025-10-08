@@ -6,7 +6,7 @@ use axum::{
     response::{IntoResponse, Response},
 };
 use serde_json::json;
-use sindri_core::errors::vm::SindriError;
+use sindri_core::errors::vm::VMError;
 
 #[derive(Debug)]
 pub struct ApiError {
@@ -23,16 +23,16 @@ impl ApiError {
     }
 }
 
-impl From<SindriError> for ApiError {
-    fn from(err: SindriError) -> Self {
+impl From<VMError> for ApiError {
+    fn from(err: VMError) -> Self {
         match err {
-            SindriError::VmNotFound(id) => {
+            VMError::VmNotFound(id) => {
                 ApiError::new(StatusCode::NOT_FOUND, format!("VM not found: {}", id))
             }
-            SindriError::VmAlreadyExists(id) => {
+            VMError::VmAlreadyExists(id) => {
                 ApiError::new(StatusCode::CONFLICT, format!("VM already exists: {}", id))
             }
-            SindriError::InvalidConfig(details) => ApiError::new(
+            VMError::InvalidConfig(details) => ApiError::new(
                 StatusCode::BAD_REQUEST,
                 format!("Invalid VM configuration: {}", details),
             ),
@@ -42,7 +42,7 @@ impl From<SindriError> for ApiError {
 
 impl From<anyhow::Error> for ApiError {
     fn from(err: anyhow::Error) -> Self {
-        if let Ok(sindri_err) = err.downcast::<SindriError>() {
+        if let Ok(sindri_err) = err.downcast::<VMError>() {
             return sindri_err.into();
         }
 
@@ -76,7 +76,7 @@ mod tests {
 
     #[test]
     fn from_sindri_error_vm_not_found() {
-        let err = SindriError::VmNotFound("123".to_string());
+        let err = VMError::VmNotFound(123);
         let api_err: ApiError = err.into();
         assert_eq!(api_err.status, StatusCode::NOT_FOUND);
         assert!(api_err.message.contains("VM not found: 123"));
@@ -84,15 +84,15 @@ mod tests {
 
     #[test]
     fn from_sindri_error_vm_already_exists() {
-        let err = SindriError::VmAlreadyExists("abc".to_string());
+        let err = VMError::VmAlreadyExists(456);
         let api_err: ApiError = err.into();
         assert_eq!(api_err.status, StatusCode::CONFLICT);
-        assert!(api_err.message.contains("VM already exists: abc"));
+        assert!(api_err.message.contains("VM already exists: 456"));
     }
 
     #[test]
     fn from_sindri_error_invalid_config() {
-        let err = SindriError::InvalidConfig("bad config".to_string());
+        let err = VMError::InvalidConfig("bad config".to_string());
         let api_err: ApiError = err.into();
         assert_eq!(api_err.status, StatusCode::BAD_REQUEST);
         assert!(
@@ -104,11 +104,11 @@ mod tests {
 
     #[test]
     fn from_anyhow_error_downcast_sindri() {
-        let sindri_err = SindriError::VmNotFound("xyz".to_string());
+        let sindri_err = VMError::VmNotFound(123);
         let err = anyhow!(sindri_err);
         let api_err: ApiError = err.into();
         assert_eq!(api_err.status, StatusCode::NOT_FOUND);
-        assert!(api_err.message.contains("VM not found: xyz"));
+        assert!(api_err.message.contains("VM not found: 123"));
     }
 
     #[test]

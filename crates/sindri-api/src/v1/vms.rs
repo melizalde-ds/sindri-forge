@@ -13,27 +13,27 @@ async fn create_vm() -> Result<Json<&'static str>, ApiError> {
     Ok(Json("Create VM"))
 }
 
-async fn get_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+async fn get_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
     Ok(Json(format!("Get VM with ID: {}", vm_id)))
 }
 
-async fn update_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+async fn update_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
     Ok(Json(format!("Update VM with ID: {}", vm_id)))
 }
 
-async fn destroy_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+async fn destroy_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
     Ok(Json(format!("Destroy VM with ID: {}", vm_id)))
 }
 
-async fn start_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+async fn start_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
     Ok(Json(format!("Start VM with ID: {}", vm_id)))
 }
 
-async fn stop_vm(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+async fn stop_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
     Ok(Json(format!("Stop VM with ID: {}", vm_id)))
 }
 
-async fn vm_metrics(Path(vm_id): Path<String>) -> Result<Json<String>, ApiError> {
+async fn vm_metrics(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
     Ok(Json(format!("Metrics for VM with ID: {}", vm_id)))
 }
 
@@ -67,44 +67,44 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_vm() {
-        let path = Path("vm-123".to_string());
+        let path = Path(123);
         let result = get_vm(path).await.unwrap();
-        assert_eq!(result.0, "Get VM with ID: vm-123");
+        assert_eq!(result.0, "Get VM with ID: 123");
     }
 
     #[tokio::test]
     async fn test_update_vm() {
-        let path = Path("vm-456".to_string());
+        let path = Path(456);
         let result = update_vm(path).await.unwrap();
-        assert_eq!(result.0, "Update VM with ID: vm-456");
+        assert_eq!(result.0, "Update VM with ID: 456");
     }
 
     #[tokio::test]
     async fn test_destroy_vm() {
-        let path = Path("vm-789".to_string());
+        let path = Path(789);
         let result = destroy_vm(path).await.unwrap();
-        assert_eq!(result.0, "Destroy VM with ID: vm-789");
+        assert_eq!(result.0, "Destroy VM with ID: 789");
     }
 
     #[tokio::test]
     async fn test_start_vm() {
-        let path = Path("vm-111".to_string());
+        let path = Path(111);
         let result = start_vm(path).await.unwrap();
-        assert_eq!(result.0, "Start VM with ID: vm-111");
+        assert_eq!(result.0, "Start VM with ID: 111");
     }
 
     #[tokio::test]
     async fn test_stop_vm() {
-        let path = Path("vm-222".to_string());
+        let path = Path(222);
         let result = stop_vm(path).await.unwrap();
-        assert_eq!(result.0, "Stop VM with ID: vm-222");
+        assert_eq!(result.0, "Stop VM with ID: 222");
     }
 
     #[tokio::test]
     async fn test_vm_metrics() {
-        let path = Path("vm-333".to_string());
+        let path = Path(333);
         let result = vm_metrics(path).await.unwrap();
-        assert_eq!(result.0, "Metrics for VM with ID: vm-333");
+        assert_eq!(result.0, "Metrics for VM with ID: 333");
     }
 
     #[test]
