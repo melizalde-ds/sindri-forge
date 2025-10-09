@@ -15,7 +15,6 @@ async fn main() -> anyhow::Result<()> {
         loop {
             println!("Daemon state:");
             println!("{:?}", unix_daemon.read().await);
-            drop(unix_daemon.read().await);
             sleep(Duration::from_secs(5)).await;
         }
     });
@@ -26,7 +25,6 @@ async fn main() -> anyhow::Result<()> {
         loop {
             println!("Health check - Daemon state:");
             println!("{:?}", health_daemon.read().await);
-            drop(health_daemon.read().await);
             sleep(Duration::from_secs(10)).await;
         }
     });
