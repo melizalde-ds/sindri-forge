@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use axum::{
     body::Body,
     http::{Method, Request, StatusCode},
@@ -7,7 +9,10 @@ use tower::ServiceExt;
 
 #[tokio::test]
 async fn test_list_vms() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -29,7 +34,10 @@ async fn test_list_vms() {
 
 #[tokio::test]
 async fn test_create_vm() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -51,7 +59,10 @@ async fn test_create_vm() {
 
 #[tokio::test]
 async fn test_get_vm() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -73,7 +84,10 @@ async fn test_get_vm() {
 
 #[tokio::test]
 async fn test_update_vm() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -95,7 +109,10 @@ async fn test_update_vm() {
 
 #[tokio::test]
 async fn test_destroy_vm() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -117,7 +134,10 @@ async fn test_destroy_vm() {
 
 #[tokio::test]
 async fn test_start_vm() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -139,7 +159,10 @@ async fn test_start_vm() {
 
 #[tokio::test]
 async fn test_stop_vm() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -161,7 +184,10 @@ async fn test_stop_vm() {
 
 #[tokio::test]
 async fn test_vm_metrics() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -183,7 +209,10 @@ async fn test_vm_metrics() {
 
 #[tokio::test]
 async fn test_invalid_route() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
