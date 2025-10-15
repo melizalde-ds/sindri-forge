@@ -1,6 +1,6 @@
 use sindri_daemon::Daemon;
 use std::sync::Arc;
-use tokio::{net::UnixListener, sync::RwLock};
+use tokio::net::UnixListener;
 
 pub struct SocketServer {
     pub listener: UnixListener,

@@ -2,10 +2,7 @@ mod socket;
 
 use sindri_daemon::Daemon;
 use std::{sync::Arc, time::Duration};
-use tokio::{
-    signal::unix::{SignalKind, signal},
-    sync::RwLock,
-};
+use tokio::signal::unix::{SignalKind, signal};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
