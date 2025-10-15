@@ -7,8 +7,10 @@ pub struct SocketServer {
 }
 
 impl SocketServer {
-    pub async fn new() -> Result<Self, std::io::Error> {
-        let listener = UnixListener::bind("/tmp/sindri.sock")?;
+    pub async fn new() -> anyhow::Result<Self> {
+        let socket_path = "/tmp/sindri.sock";
+        let _ = std::fs::remove_file(socket_path);
+        let listener = UnixListener::bind(socket_path)?;
         Ok(Self { listener })
     }
 
