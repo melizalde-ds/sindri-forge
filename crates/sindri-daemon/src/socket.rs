@@ -1,5 +1,5 @@
 use sindri_daemon::Daemon;
-use std::sync::Arc;
+use std::{path::Path, sync::Arc};
 use tokio::net::UnixListener;
 
 pub struct SocketServer {
