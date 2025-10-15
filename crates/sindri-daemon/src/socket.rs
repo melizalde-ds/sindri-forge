@@ -1,5 +1,6 @@
 use sindri_daemon::Daemon;
-use std::{path::Path, sync::Arc};
+use std::sync::Arc;
+use tokio::io::AsyncReadExt;
 use tokio::net::UnixListener;
 
 pub struct SocketServer {
@@ -11,7 +12,10 @@ impl SocketServer {
         let socket_path = "/tmp/sindri.sock";
         if let Err(e) = std::fs::remove_file(socket_path) {
             if e.kind() != std::io::ErrorKind::NotFound {
-                eprintln!("Failed to remove existing socket file {}: {}", socket_path, e);
+                eprintln!(
+                    "Failed to remove existing socket file {}: {}",
+                    socket_path, e
+                );
             }
         }
         let listener = UnixListener::bind(socket_path)?;
@@ -37,10 +41,13 @@ impl SocketServer {
     }
 }
 
-async fn handle_client(stream: tokio::net::UnixStream, _daemon: Arc<Daemon>) -> anyhow::Result<()> {
+async fn handle_client(
+    mut stream: tokio::net::UnixStream,
+    _daemon: Arc<Daemon>,
+) -> anyhow::Result<()> {
     println!("Client connected");
     let mut buffer = [0u8; 1024];
-    let n = stream.try_read(&mut buffer)?;
+    let n = stream.read(&mut buffer).await?;
     let message = String::from_utf8_lossy(&buffer[..n]);
     println!("Received message: {}", message);
     Ok(())

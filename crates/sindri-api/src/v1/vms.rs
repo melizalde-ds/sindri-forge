@@ -1,43 +1,87 @@
-use crate::error::ApiError;
+use std::sync::Arc;
+
+use crate::{error::ApiError, socket::SocketClient};
 use axum::{
     Json, Router,
-    extract::Path,
+    extract::{Path, State},
     routing::{delete, get, post, put},
 };
 
-async fn list_vms() -> Result<Json<&'static str>, ApiError> {
-    Ok(Json("List of VMs"))
+async fn list_vms(
+    State(socket_client): State<Arc<SocketClient>>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client.send_message("LIST_VMS").await?;
+    Ok(Json(response))
 }
 
-async fn create_vm() -> Result<Json<&'static str>, ApiError> {
-    Ok(Json("Create VM"))
+async fn create_vm(
+    State(socket_client): State<Arc<SocketClient>>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client.send_message("CREATE_VM").await?;
+    Ok(Json(response))
 }
 
-async fn get_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
-    Ok(Json(format!("Get VM with ID: {}", vm_id)))
+async fn get_vm(
+    State(socket_client): State<Arc<SocketClient>>,
+    Path(vm_id): Path<u32>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client
+        .send_message(format!("GET_VM {}", vm_id).as_str())
+        .await?;
+    Ok(Json(response))
 }
 
-async fn update_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
-    Ok(Json(format!("Update VM with ID: {}", vm_id)))
+async fn update_vm(
+    State(socket_client): State<Arc<SocketClient>>,
+    Path(vm_id): Path<u32>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client
+        .send_message(format!("UPDATE_VM {}", vm_id).as_str())
+        .await?;
+    Ok(Json(response))
 }
 
-async fn destroy_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
-    Ok(Json(format!("Destroy VM with ID: {}", vm_id)))
+async fn destroy_vm(
+    State(socket_client): State<Arc<SocketClient>>,
+    Path(vm_id): Path<u32>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client
+        .send_message(format!("DESTROY_VM {}", vm_id).as_str())
+        .await?;
+    Ok(Json(response))
 }
 
-async fn start_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
-    Ok(Json(format!("Start VM with ID: {}", vm_id)))
+async fn start_vm(
+    State(socket_client): State<Arc<SocketClient>>,
+    Path(vm_id): Path<u32>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client
+        .send_message(format!("START_VM {}", vm_id).as_str())
+        .await?;
+    Ok(Json(response))
 }
 
-async fn stop_vm(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
-    Ok(Json(format!("Stop VM with ID: {}", vm_id)))
+async fn stop_vm(
+    State(socket_client): State<Arc<SocketClient>>,
+    Path(vm_id): Path<u32>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client
+        .send_message(format!("STOP_VM {}", vm_id).as_str())
+        .await?;
+    Ok(Json(response))
 }
 
-async fn vm_metrics(Path(vm_id): Path<u32>) -> Result<Json<String>, ApiError> {
-    Ok(Json(format!("Metrics for VM with ID: {}", vm_id)))
+async fn vm_metrics(
+    State(socket_client): State<Arc<SocketClient>>,
+    Path(vm_id): Path<u32>,
+) -> Result<Json<String>, ApiError> {
+    let response = socket_client
+        .send_message(format!("VM_METRICS {}", vm_id).as_str())
+        .await?;
+    Ok(Json(response))
 }
 
-pub fn router() -> Router {
+pub fn router(socket_client: Arc<SocketClient>) -> Router {
     Router::new()
         .route("/", get(list_vms))
         .route("/", post(create_vm))
@@ -47,6 +91,7 @@ pub fn router() -> Router {
         .route("/{id}/start", post(start_vm))
         .route("/{id}/stop", post(stop_vm))
         .route("/{id}/metrics", get(vm_metrics))
+        .with_state(socket_client)
 }
 
 #[cfg(test)]
@@ -106,9 +151,9 @@ mod tests {
         let result = vm_metrics(path).await.unwrap();
         assert_eq!(result.0, "Metrics for VM with ID: 333");
     }
-
     #[test]
     fn test_router_created() {
-        let _ = router();
+        let socket_client = Arc::new(SocketClient::default());
+        let _ = router(socket_client);
     }
 }
