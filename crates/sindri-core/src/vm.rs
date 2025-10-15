@@ -1,8 +1,11 @@
 use std::collections::HashMap;
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct VMId(pub u32);
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct VM {
-    pub id: u32,
+    pub id: VMId,
     pub name: String,
     pub config: VMConfig,
     pub network: VMNetwork,

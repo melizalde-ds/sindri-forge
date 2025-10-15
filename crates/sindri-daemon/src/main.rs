@@ -1,43 +1,41 @@
-use std::{sync::Arc, time::Duration};
+mod socket;
 
 use sindri_daemon::Daemon;
-use tokio::{sync::RwLock, time::sleep};
+use std::{sync::Arc, time::Duration};
+use tokio::signal::unix::{SignalKind, signal};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let daemon = Arc::new(RwLock::new(Daemon::new()));
-    println!("Sindri Daemon started. Listening for commands...");
-    println!("{:?}", daemon);
+    let daemon = Arc::new(Daemon::new());
+    let socket_server = socket::SocketServer::new().await?;
 
-    let unix_daemon = daemon.clone();
-    let unix_listener = tokio::spawn(async move {
-        println!("Starting Unix socket listener...");
+    let vm_state = daemon.clone();
+    let state_checker = tokio::spawn(async move {
+        let mut interval = tokio::time::interval(Duration::from_secs(30));
         loop {
-            println!("Daemon state:");
-            println!("{:?}", unix_daemon.read().await);
-            drop(unix_daemon.read().await);
-            sleep(Duration::from_secs(5)).await;
+            interval.tick().await;
+            println!("Checking VM state...");
         }
     });
 
-    let health_daemon = daemon.clone();
-    let health_listener = tokio::spawn(async move {
-        println!("Starting health check endpoint...");
-        loop {
-            println!("Health check - Daemon state:");
-            println!("{:?}", health_daemon.read().await);
-            drop(health_daemon.read().await);
-            sleep(Duration::from_secs(10)).await;
-        }
-    });
+    let daemon_state = daemon.clone();
+    let socket_task = tokio::spawn(async move { socket_server.run(daemon_state).await });
 
-    tokio::select! {
-        _ = unix_listener => {}
-        _ = health_listener => {}
-        _ = tokio::signal::ctrl_c() => {
-            println!("Received Ctrl+C, shutting down...");
-        }
-    }
+    shutdown_signal().await;
+    println!("Shutting down gracefully...");
+
+    state_checker.abort();
+    socket_task.abort();
 
     Ok(())
+}
+
+async fn shutdown_signal() {
+    let mut sigterm = signal(SignalKind::terminate()).expect("Failed to register SIGTERM handler");
+    let mut sigint = signal(SignalKind::interrupt()).expect("Failed to register SIGINT handler");
+
+    tokio::select! {
+        _ = sigterm.recv() => println!("Received SIGTERM"),
+        _ = sigint.recv() => println!("Received SIGINT"),
+    }
 }
