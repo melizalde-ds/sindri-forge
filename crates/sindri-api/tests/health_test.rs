@@ -1,10 +1,14 @@
 use axum::body::Body;
 use axum::http::{Request, StatusCode};
+use std::sync::Arc;
 use tower::ServiceExt;
 
 #[tokio::test]
 async fn test_healthz_endpoint() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
@@ -21,7 +25,10 @@ async fn test_healthz_endpoint() {
 
 #[tokio::test]
 async fn test_readyz_endpoint() {
-    let app = sindri_api::create_app();
+    let socket_client = Arc::new(sindri_api::create_socket_client(String::from(
+        "/tmp/sindri.sock",
+    )));
+    let app = sindri_api::create_app(socket_client);
 
     let response = app
         .oneshot(
