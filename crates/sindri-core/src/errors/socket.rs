@@ -1,6 +1,7 @@
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum SocketError {
     #[error("Cannot connect to daemon socket at {path}: {reason}")]
     ConnectionFailed { path: String, reason: String },
