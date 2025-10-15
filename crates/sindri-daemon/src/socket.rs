@@ -9,7 +9,11 @@ pub struct SocketServer {
 impl SocketServer {
     pub async fn new() -> anyhow::Result<Self> {
         let socket_path = "/tmp/sindri.sock";
-        let _ = std::fs::remove_file(socket_path);
+        if let Err(e) = std::fs::remove_file(socket_path) {
+            if e.kind() != std::io::ErrorKind::NotFound {
+                eprintln!("Failed to remove existing socket file {}: {}", socket_path, e);
+            }
+        }
         let listener = UnixListener::bind(socket_path)?;
         Ok(Self { listener })
     }
