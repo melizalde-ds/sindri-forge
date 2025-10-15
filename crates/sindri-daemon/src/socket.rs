@@ -40,8 +40,8 @@ impl SocketServer {
 async fn handle_client(stream: tokio::net::UnixStream, _daemon: Arc<Daemon>) -> anyhow::Result<()> {
     println!("Client connected");
     let mut buffer = [0u8; 1024];
-    stream.try_read(&mut buffer)?;
-    let message = String::from_utf8_lossy(&buffer);
+    let n = stream.try_read(&mut buffer)?;
+    let message = String::from_utf8_lossy(&buffer[..n]);
     println!("Received message: {}", message);
     Ok(())
 }
