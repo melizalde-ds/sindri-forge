@@ -75,3 +75,41 @@ pub struct CloudHypervisorRuntime {
     pub pid: u32,
     pub api_socket: String,
 }
+
+impl VM {
+    pub fn new(
+        id: u32,
+        name: String,
+        config: VMConfig,
+        network: VMNetwork,
+        storage: VMStorage,
+        kernel: KernelConfig,
+    ) -> Self {
+        VM {
+            id: VMId(id),
+            name,
+            config,
+            network,
+            storage,
+            status: VMStatus::Stopped,
+            kernel,
+            runtime: None,
+        }
+    }
+}
+
+impl VMConfig {
+    pub fn new(cpu: u8, memory: u64, metadata: Option<HashMap<String, String>>) -> Self {
+        VMConfig {
+            cpu,
+            memory,
+            metadata,
+        }
+    }
+}
+
+impl From<u32> for VMId {
+    fn from(id: u32) -> Self {
+        VMId(id)
+    }
+}

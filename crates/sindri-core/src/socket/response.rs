@@ -7,7 +7,7 @@ use crate::{
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SocketResponse {
-    OK { data: ResponseData },
+    Ok { data: ResponseData },
     Error(SindriError),
 }
 
@@ -25,4 +25,14 @@ pub enum ResponseData {
 pub enum HealthCheck {
     Healthy,
     Unhealthy(String),
+}
+
+impl SocketResponse {
+    pub fn ok(data: ResponseData) -> Self {
+        SocketResponse::Ok { data }
+    }
+
+    pub fn error(err: SindriError) -> Self {
+        SocketResponse::Error(err)
+    }
 }
