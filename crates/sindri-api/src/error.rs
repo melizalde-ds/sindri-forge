@@ -1,7 +1,7 @@
-#![allow(unused_imports)]
 use anyhow::anyhow;
 use axum::{
     Json,
+    extract::rejection::{ExtensionRejection, JsonRejection, PathRejection, QueryRejection},
     http::StatusCode,
     response::{IntoResponse, Response},
 };
@@ -85,6 +85,46 @@ impl IntoResponse for ApiError {
         }));
 
         (self.status, body).into_response()
+    }
+}
+
+// TODO: Add more rejection types as needed and use a cleaner wrapper
+impl From<JsonRejection> for ApiError {
+    fn from(rejection: JsonRejection) -> Self {
+        ApiError::new(
+            StatusCode::BAD_REQUEST,
+            format!("Invalid JSON request: {}", rejection),
+        )
+    }
+}
+
+// TODO: Add more rejection types as needed and use a cleaner wrapper
+impl From<PathRejection> for ApiError {
+    fn from(rejection: PathRejection) -> Self {
+        ApiError::new(
+            StatusCode::BAD_REQUEST,
+            format!("Invalid path parameter: {}", rejection),
+        )
+    }
+}
+
+// TODO: Add more rejection types as needed and use a cleaner wrapper
+impl From<QueryRejection> for ApiError {
+    fn from(rejection: QueryRejection) -> Self {
+        ApiError::new(
+            StatusCode::BAD_REQUEST,
+            format!("Invalid query parameter: {}", rejection),
+        )
+    }
+}
+
+// TODO: Add more rejection types as needed and use a cleaner wrapper
+impl From<ExtensionRejection> for ApiError {
+    fn from(rejection: ExtensionRejection) -> Self {
+        ApiError::new(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Missing extension: {}", rejection),
+        )
     }
 }
 
