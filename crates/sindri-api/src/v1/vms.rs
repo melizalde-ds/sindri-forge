@@ -8,7 +8,7 @@ use axum::{
 };
 use sindri_core::{
     socket::request::SocketRequest,
-    vm::{KernelConfig, VM, VMConfig, VMId, VMNetwork, VMStorage},
+    vm::{KernelConfig, VM, VMId},
 };
 
 async fn list_vms(
@@ -23,23 +23,12 @@ async fn create_vm(
 ) -> Result<Json<String>, ApiError> {
     let vm = VM::new(
         0,
-        "example-vm".to_string(),
-        VMConfig {
-            cpu: 2,
-            memory: 2048,
-            metadata: None,
-        },
-        VMNetwork {
-            ip_address: "".to_string(),
-            mac_address: "".to_string(),
-            subnet: 24,
-            gateway: "".to_string(),
-            dns: vec![],
-        },
-        VMStorage { disks: vec![] },
+        "test".to_string(),
+        4,
+        2048,
         KernelConfig {
-            path: "".to_string(),
             parameters: vec![],
+            path: "/path/to/kernel".to_string(),
         },
     );
     let response = socket_client
@@ -65,24 +54,13 @@ async fn update_vm(
 ) -> Result<Json<String>, ApiError> {
     let vm_id = VMId::from(vm_id);
     let vm = VM::new(
-        vm_id.0,
-        "updated-vm".to_string(),
-        VMConfig {
-            cpu: 4,
-            memory: 4096,
-            metadata: None,
-        },
-        VMNetwork {
-            ip_address: "".to_string(),
-            mac_address: "".to_string(),
-            subnet: 24,
-            gateway: "".to_string(),
-            dns: vec![],
-        },
-        VMStorage { disks: vec![] },
+        0,
+        "test".to_string(),
+        4,
+        2048,
         KernelConfig {
-            path: "".to_string(),
             parameters: vec![],
+            path: "/path/to/kernel".to_string(),
         },
     );
     let response = socket_client
