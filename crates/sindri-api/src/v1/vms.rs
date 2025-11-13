@@ -8,7 +8,7 @@ use axum::{
 };
 use sindri_core::{
     socket::request::SocketRequest,
-    vm::{KernelConfig, VM, VMId},
+    vm::{VM, VMId},
 };
 
 async fn list_vms(
@@ -20,17 +20,8 @@ async fn list_vms(
 
 async fn create_vm(
     State(socket_client): State<Arc<SocketClient>>,
+    Json(vm): Json<VM>,
 ) -> Result<Json<String>, ApiError> {
-    let vm = VM::new(
-        0,
-        "test".to_string(),
-        4,
-        2048,
-        KernelConfig {
-            parameters: vec![],
-            path: "/path/to/kernel".to_string(),
-        },
-    );
     let response = socket_client
         .send_message(SocketRequest::CreateVM(vm))
         .await?;
@@ -51,20 +42,11 @@ async fn get_vm(
 async fn update_vm(
     State(socket_client): State<Arc<SocketClient>>,
     Path(vm_id): Path<u32>,
+    Json(vm): Json<VM>,
 ) -> Result<Json<String>, ApiError> {
     let vm_id = VMId::from(vm_id);
-    let vm = VM::new(
-        0,
-        "test".to_string(),
-        4,
-        2048,
-        KernelConfig {
-            parameters: vec![],
-            path: "/path/to/kernel".to_string(),
-        },
-    );
     let response = socket_client
-        .send_message(SocketRequest::UpdateVM(vm_id, vm))
+        .send_message(SocketRequest::UpdateVM(vm_id, vm.clone()))
         .await?;
     Ok(Json(response))
 }
