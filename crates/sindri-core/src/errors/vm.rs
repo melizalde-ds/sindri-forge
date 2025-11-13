@@ -1,6 +1,7 @@
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum VMError {
     #[error("VM not found: {0}")]
     VmNotFound(u32),
